@@ -10,7 +10,11 @@
 // hint : Decorator 의 실행순서
 // Class decorator 가 받는 인자
 function Logger(logString: string) {
-  // 여기에 코딩하세요.
+  console.log('LOGGER FACTORY');
+  return function (constructor: any) {
+    console.log(logString);
+    return constructor;
+  }
 }
 
 //문제2
@@ -19,14 +23,25 @@ function Logger(logString: string) {
 //hint3 : Person class 의 name 을 사용하기 위해서는 const p = new constructor(); 를 사용하세요
 // template은 h1 태그를 사용해주세요
 function WithTemplate(template: string, hookId: string) {
-  // 여기에 코딩하세요.
+  console.log('TEMPLATE FACTORY');
+
   return function (constructor: any) {
-   // 여기에 코딩하세요.
+    console.log('Rendering template')
+    const p = new constructor();
+    return class {
+      name = p.name;
+      constructor() {
+        const el: HTMLElement = document.getElementById(hookId) as HTMLElement;
+        const nameEl: HTMLElement = document.createElement(template);
+        el.appendChild(nameEl).textContent = this.name;
+        console.log(constructor);
+      }
+    };
   };
 }
 
-//Decorator 넣을자리1
-//Decorator 넣을자리2
+@Logger('LOGGING')
+@WithTemplate('h1', 'app')
 class Person {
   name = "tj";
 
@@ -34,3 +49,5 @@ class Person {
     console.log("Creating person object...");
   }
 }
+
+const p = new Person();
