@@ -13,6 +13,7 @@ function Logger(logString: string) {
   console.log('LOGGER FACTORY');
   return function (constructor: any) {
     console.log(logString);
+    console.log(constructor);
     return constructor;
   }
 }
@@ -24,19 +25,14 @@ function Logger(logString: string) {
 // template은 h1 태그를 사용해주세요
 function WithTemplate(template: string, hookId: string) {
   console.log('TEMPLATE FACTORY');
-
   return function (constructor: any) {
+    const el: HTMLElement = document.getElementById(hookId) as HTMLElement;
+    const h1: HTMLElement = document.createElement(template);
+
     console.log('Rendering template')
     const p = new constructor();
-    return class {
-      name = p.name;
-      constructor() {
-        const el: HTMLElement = document.getElementById(hookId) as HTMLElement;
-        const nameEl: HTMLElement = document.createElement(template);
-        el.appendChild(nameEl).textContent = p.name;
-        console.log(constructor);
-      }
-    };
+    el.appendChild(h1).textContent = p.name;
+    return constructor;
   };
 }
 
@@ -49,5 +45,3 @@ class Person {
     console.log("Creating person object...");
   }
 }
-
-const p = new Person();
