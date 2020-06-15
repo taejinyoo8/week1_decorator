@@ -6,29 +6,32 @@
 
 // npm start
 
-// 문제1,2 : Logger 와 WithTemplate Decorator 를 사용하여 answer1.png 와 같은 화면을 출력하세요.
-// hint : Decorator 의 실행순서
-// Class decorator 가 받는 인자
 function Logger(logString: string) {
-  // 여기에 코딩하세요.
-}
-
-//문제2
-//hint1 : hookEl.innerHTML = template;
-//hint2 : hookEl.querySelector('태그네임').textContent = 넣을값
-//hint3 : Person class 의 name 을 사용하기 위해서는 const p = new constructor(); 를 사용하세요
-// template은 h1 태그를 사용해주세요
-function WithTemplate(template: string, hookId: string) {
-  // 여기에 코딩하세요.
+  console.log(logString);
   return function (constructor: any) {
-   // 여기에 코딩하세요.
+    console.log("LOGGING");
+    console.log(constructor);
+    return constructor;
   };
 }
 
-//Decorator 넣을자리1
-//Decorator 넣을자리2
+function WithTemplate(template: string, hookId: string) {
+  // 여기에 코딩하세요.
+  console.log("TEMPLATE FACTORY");
+  return function (constructor: any) {
+    console.log("Rendering template");
+    const person = new constructor();
+    const hookEl = document.createElement(template);
+    const p = document.getElementById(hookId);
+    hookEl.innerHTML = person.name;
+    p?.appendChild(hookEl);
+    return constructor;
+  };
+}
+@Logger("LOGGER FACTORY")
+@WithTemplate("h1", "app")
 class Person {
-  name = "tj";
+  name = "mk";
 
   constructor() {
     console.log("Creating person object...");
